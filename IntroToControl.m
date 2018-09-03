@@ -8,7 +8,9 @@
 % Contact:      KNMALE002@myuct.ac.za
 
 %% TO ADD:
+% nyquist
 % nichols + inverse nichols (with ngrid.m)
+% DIY functions which semi replicate rlocus, Bode, nyquist and nichols
 
 %% 0: how to use this document
 %% 0.1: run things line by line
