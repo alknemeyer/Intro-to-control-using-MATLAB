@@ -443,20 +443,42 @@ sisotool(G)
 % the more you spend time understanding the theory and your system, the
 % less time you'll spend frustrated in the lab
 
-%% 3.8.1: Nyquist plots
+%% 3.8: Nyquist plots
 disp('------------------------------------------------')
-% by now you've likely seen that a factor (1 + L(s)) appears in the
-% denominator quite a lot. Problems arise when L -> -1, as the transfer
-% function gain goes to infinity
+% Next up are Nyquist plots. Their main use is tell you more about the
+% stability of a given transfer function.
 
+% This isn't the best place to try explain how the other parts of Nyquist
+% work (comparing open loop poles, circulations, etc) so I'd suggest
+% reading up on that to properly understand what's going on
 
-%% 3.8.1: State Space - introduction
+% I'll be honest - I haven't used Nyquist plots all that much myself (bear
+% in mind that I'm only one year ahead of you, at time of writing). So,
+% I'll do things slightly differently and refer you to the wikipedia page:
+% https://en.wikipedia.org/wiki/Nyquist_stability_criterion#Nyquist_plot
+
+% Don't worry trying to understand everything - just read the intro
+% paragraphs. This part,
+% https://en.wikipedia.org/wiki/Nyquist_stability_criterion#The_Nyquist_criterion
+% and the part after are also quite useful, though there are other methods
+% (such as shifting the poles of the system to be off the j omega axis)
+
+% anyway - on to plotting:
+tf1 = tf(1, [1, 0.3, -0.1])
+nyquist(tf1); grid on; shg
+
+% notice how the grid corresponds to gain, and that the gain gets higher
+% closer to the (-1, 0) point. Using the theory - is this system stable?
+
+% also, note that you can right click on the plot to get more info
+
+%% 3.9.1: State Space - introduction
 disp('------------------------------------------------')
 % the best place to start with state space modelling is to read through
 % some of the documentation
 help ss
 
-%% 3.8.2: State Space - Creating state space models
+%% 3.9.2: State Space - Creating state space models
 disp('------------------------------------------------')
 % from A, B, C, D matrices:
 A = [-1.3333 -1.6667
@@ -479,7 +501,7 @@ t = tf([1, 2], [3, 4, 5]);
 [num, den] = ss2tf(A, B, C, D);
 t = tf(num, den) *3/3  % need to put this here to normalise for some reason
 
-%% 3.8.3: State Space - Creating a controller
+%% 3.9.3: State Space - Creating a controller
 disp('------------------------------------------------')
 % say that, after having done all your calculations, you know where you
 % want to place your poles in a state-feedback controller.
