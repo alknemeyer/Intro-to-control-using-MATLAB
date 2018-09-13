@@ -34,9 +34,11 @@ figure()
 
 % by default, a new plot is made each time the plot command is called
 % you can change this using the 'hold' command
-y = sin(0:0.1:10);
-plot(y); hold on; plot(y + 1); plot(y + 2);
-legend('y', 'y + 1', 'y + 2'); grid on;
+t = 0:0.1:20;
+y = sin(t);
+plot(y); hold on; plot(y .* sin(10*t)); % . for element-wise multiplication
+legend('y', 'y * sin(10t)'); grid on;
+xlabel('time[s]')
 
 %% 2.4: making subplots
 y = sin(0:0.1:100);
@@ -53,6 +55,7 @@ subplot(3, 2, 2); plot(y + 10); title('2: top right')
 subplot(3, 2, 3); plot(y - 10); title('3: middle left')
 subplot(3, 2, 4); plot(y * 5); title('4: middle right')
 subplot(3, 2, 5); plot(y / 5); title('5: you get the idea?')
+subplot(3, 2, 6); plot(y .* y); title('x_1^2 \infty <-- fancy text in plots')
 shg;
 
 % note that we didn't call figure() before, so the previous plot (if it

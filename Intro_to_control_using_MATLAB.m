@@ -11,7 +11,7 @@
 %% this one
 
 %% 3: basics of control
-%% 3.1 creating transfer funtions
+%% 3.1.1 creating transfer funtions
 disp('------------------------------------------------')
 % there are a couple ways of doing this. One way is to define 's' as a
 % transfer function variable and then work with it
@@ -26,7 +26,7 @@ tf_2 = tf(numerator_coeffs, denominator_coeffs)
 % a third is to define the zeros, poles and gains of the transfer function
 tf_3 = zpk(-1, [2, 2], 5)
 
-%% 3.2: basic transfer function arithmetic
+%% 3.1.2: basic transfer function arithmetic
 disp('------------------------------------------------')
 % multiplication etc works as you'd expect
 tf1 = 1/s;
@@ -36,7 +36,29 @@ tf_prod = tf1 * tf2
 tf_div = tf1 / tf2
 tf_add = tf1 + tf2
 
-%% 3.3.1: getting step responses
+%% 3.2: getting some basic transfer function characteristics
+disp('------------------------------------------------')
+P = 1/(s + 2)/(s + 3)
+
+% print the poles, damping factor, frequency, and time constant
+damp(P)
+
+% get the poles of the system
+p = pole(P); fprintf('\nPoles of the system are %f, %f\n', p(1), p(2))
+
+% factorise the system
+factorised_system = zpk(P)
+
+% get the residue and the roots of the system (google that if you don't
+% understand). The funny {:} syntax unpacks a MATLAB 'cell' into an array.
+% I don't really understand why it's like that - sorry!
+[r, p, k] = residue(P.num{:}, P.den{:});
+fprintf('r = %d, %d\np = %d, %d\nk = []\n', r(1), r(2), p(1), p(2))
+
+% don't bother memorizing this stuff - just know that it's there, and that
+% you can always come back here or use 'help residue' if you need it
+
+%% 3.3.1: Step responses - how to make them
 disp('------------------------------------------------')
 % the 'step' command gives the OPEN LOOP step response of the system
 sys = 3.5/(s + 2)
@@ -49,12 +71,7 @@ legend('open loop -> T(s)', 'closed loop -> T(s)/(1+T(s))')
 
 % don't think of sys/T(s) as a plant or any specific thing. It's just 'a
 % transfer function' which relates some input to some output.
-
-%% 3.3.2: more step responses
-disp('------------------------------------------------')
-% now, think back about how transfer functions work in the orignal block
-% diagram. For example, we usually work with T_y/r (transfer function from
-% input r to output y) but it's also useful to see other things, like the
+ the
 % input to the plant. Let's make a simple controller - just a gain of 5
 plant = 3/(s + 3);
 controller = 5;
@@ -72,7 +89,7 @@ step(plant, T_y_r_cl, T_y_u_cl); grid on;
 legend('r -> y, open loop', 'r -> y, closed loop', 'd_in -> y, closed loop')
 shg;
 
-%% 3.3.3: how do we interpret this?
+%% 3.3.2: Step responses - how do we interpret this?
 disp('------------------------------------------------')
 % closing the loop and adding a gain of five greatly increases the plant's
 % performance! However, we still have two issues -
@@ -96,7 +113,8 @@ L = plant * controller_v2;
 
 T_y_r_cl = L/(1 + L);
 T_y_u_cl = plant/(1 + L);
-step(plant, T_y_r_cl, T_y_u_cl); grid on; shg;
+step(plant, T_y_r_cl, T_y_u_cl, 8); % the 8 at the end = t_final
+grid on; shg;
 legend('plant - open loop', 'r -> y, closed loop', 'd_in -> y, closed loop')
 
 % now, if there is a step input disturbance, the plant initially goes a bit
@@ -313,7 +331,8 @@ legend('first order system', 'second order system')
 disp('------------------------------------------------')
 % Bode plots are pretty and all, but how do we actually use them?
 tf_complex_poles = 1/(s^2 + 0.1*s + 4)  % poles at s = -0.05 +- 2i
-bode(tf_complex_poles); grid on;
+bode(tf_complex_poles, {0.1, 10}); grid on;
+% the {0.2, 10} bit is the range of frequencies to plot
 
 % look at figure 1 first
 
@@ -333,7 +352,7 @@ bode(tf_complex_poles); grid on;
 %       -12dB. Convert from dB's: 10^(-12/20) = 0.25
 
 % let's look at figure 2 to see whether these conclusions are true -
-figure(2); step(tf_complex_poles)
+figure(2); step(tf_complex_poles); grid on;
 % high frequency component --> true
 % low DC gain of 0.25 --> true
 
